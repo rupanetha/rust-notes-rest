@@ -15,16 +15,15 @@ use crate::{
     AppState,
 };
 
-// Convert DB Model to Response
-fn to_note_response(note: &NoteModel) -> NoteModelResponse {
-    NoteModelResponse {
-        id: note.id.to_owned(),
-        title: note.title.to_owned(),
-        content: note.content.to_owned(),
-        is_published: note.is_published !=0,
-        created_at: note.created_at.unwrap(),
-        updated_at: note.updated_at.unwrap(),
-    }
+pub async fn health_check_handler() -> impl IntoResponse {
+    const MESSAGE: &str = "API Services";
+
+    let json_response = serde_json::json!({
+        "status": "ok",
+        "message": MESSAGE
+    });
+
+    Json(json_response)
 }
 
 // Function to handle fetching all Notes records
@@ -270,4 +269,16 @@ pub async fn delete_note_handler(
     }
 
     Ok(StatusCode::OK)
+}
+
+// Convert DB Model to Response
+fn to_note_response(note: &NoteModel) -> NoteModelResponse {
+    NoteModelResponse {
+        id: note.id.to_owned(),
+        title: note.title.to_owned(),
+        content: note.content.to_owned(),
+        is_published: note.is_published !=0,
+        created_at: note.created_at.unwrap(),
+        updated_at: note.updated_at.unwrap(),
+    }
 }
